@@ -10,6 +10,7 @@ module information.retrieval.project {
     requires com.opencsv;
     requires org.apache.commons.csv;
     requires org.apache.commons.lang3;
+    requires javafx.web;
 
     opens front_end to javafx.fxml;
     exports front_end;

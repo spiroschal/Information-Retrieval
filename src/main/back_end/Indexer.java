@@ -41,7 +41,7 @@ public class Indexer {
         return(doc);
     }
 
-    private static List<Document> makeIntexer(IndexWriter w, String csv_file) throws IOException {
+    public static List<Document> makeIntexer(IndexWriter w, String csv_file) throws IOException {
         List<Document> documents = new ArrayList<Document>();
         int counter = 0;//
 
@@ -68,7 +68,7 @@ public class Indexer {
         return documents;
     }
 
-    private static List<Document> searchIntexer(Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
+    public static List<Document> searchIntexer(Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
         int hitsPerPage = 10;
         Query q = new QueryParser(field, analyzer).parse(query);
 
@@ -97,6 +97,10 @@ public class Indexer {
         }
 
         return docs_result;
+    }
+
+    public String myFunction(String arg1, String arg2) {
+        return "Result: " + arg1 + " " + arg2;
     }
 
     public static void main(String[] args) throws IOException, ParseException {
