@@ -68,7 +68,7 @@ public class Indexer {
         return documents;
     }
 
-    private static void searchIntexer(Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
+    private static List<Document> searchIntexer(Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
         int hitsPerPage = 10;
         Query q = new QueryParser(field, analyzer).parse(query);
 
@@ -77,21 +77,26 @@ public class Indexer {
         TopDocs docs = searcher.search(q, hitsPerPage);
         ScoreDoc[] hits = docs.scoreDocs;
 
+        List<Document> docs_result = new ArrayList<Document>();
+
         // print the hits
-        System.out.println("Found " + hits.length + " hits.");
+        System.out.println("Found " + hits.length + " hits.\n");
         for(int i=0;i<hits.length;++i) {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
+            docs_result.add(d);
             System.out.println((i + 1) + ". " + d.get("source_id"));
-            System.out.println(d.get("full_name"));
-//            System.out.println(d.get("institution"));
-//            System.out.println(d.get("year"));
-//            System.out.println(d.get("title"));
-//            System.out.println(d.get("abstract"));
-//            System.out.println(d.get("full_text"));
+            System.out.println("-> " + d.get("full_name"));
+            System.out.println("-> " + d.get("institution"));
+            System.out.println("-> " + d.get("year"));
+            System.out.println("-> " + d.get("title"));
+            System.out.println("-> " + d.get("abstract").substring(0, 60) + " ...");
+            System.out.println("-> " + d.get("full_text").substring(0, 60) + " ...");
 
-            System.out.println();
+            System.out.println("__________________________________________________________________");
         }
+
+        return docs_result;
     }
 
     public static void main(String[] args) throws IOException, ParseException {
@@ -135,7 +140,7 @@ public class Indexer {
         w.close();
 
         //Search the Index
-        String query = "Noise"; // write your String_Query HERE
+        String query = "Bregman"; // write your String_Query HERE
         String field = "title"; // write your String_Field HERE
         searchIntexer(index, query, field, analyzer);
     }

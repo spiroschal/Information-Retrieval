@@ -108,7 +108,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>SimpleJavaFXApp</mainClass>
+                    <mainClass>GuiApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
