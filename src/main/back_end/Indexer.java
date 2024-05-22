@@ -70,7 +70,7 @@ public class Indexer {
         return documents;
     }
 
-    public static List<Document> searchIntexer(int numberOfHits, Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
+    public static List<String[]> searchIntexer(int numberOfHits, Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
         int hitsPerPage = numberOfHits;//909;
         Query q = new QueryParser(field, analyzer).parse(query);
 //        if(field.equals("all")){
@@ -87,30 +87,44 @@ public class Indexer {
         TopDocs docs = searcher.search(q, hitsPerPage);
         ScoreDoc[] hits = docs.scoreDocs;
 
-        List<Document> docs_result = new ArrayList<Document>();
+        List<String[]> docs_result = new ArrayList<>();
 
         // print the hits
         System.out.println("Found " + hits.length + " hits.\n");
         for(int i=0;i<hits.length;++i) {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
-            docs_result.add(d);
-            System.out.println((i + 1) + ". " + d.get("source_id"));
-            System.out.println("-> " + d.get("full_name"));
-            System.out.println("-> " + d.get("institution"));
-            System.out.println("-> " + d.get("year"));
-            System.out.println("-> " + d.get("title"));
-            System.out.println("-> " + d.get("abstract").substring(0, 60) + " ...");
-            System.out.println("-> " + d.get("full_text").substring(0, 60) + " ...");
+            //docs_result.add(d);
 
+            // String hit_num
+            String author = d.get("full_name");
+            String institution = d.get("institution");
+            String year = d.get("year");
+            String title = d.get("title");
+            String abstr = d.get("abstract");
+            String papper = d.get("full_text");
+            String[] doc_result = {Integer.toString(i + 1), author, institution, year, title, abstr, papper};
+            docs_result.add(doc_result);
+
+            System.out.println((i + 1) + ". " + d.get("source_id"));
+            System.out.println("-> " + author);
+            System.out.println("-> " + institution);
+            System.out.println("-> " + year);
+            System.out.println("-> " + title);
+            System.out.println("-> " + abstr.substring(0, 60) + " ...");
+            System.out.println("-> " + papper.substring(0, 60) + " ...");
             System.out.println("__________________________________________________________________");
         }
 
         return docs_result;
     }
 
-    public String myFunction(String arg1, String arg2) {
-        return "Result: " + arg1 + " " + arg2;
+    public List<String> myFunction(String arg1, String arg2) {
+        List<String> results = new ArrayList<>();
+        for (int i = 0; i < 12; i++) { // Just an example to return multiple results
+            results.add("Result " + (i+1) + ": " + arg1 + arg2);
+        }
+        return results;
     }
 
     public static void main(String[] args) throws IOException, ParseException {
