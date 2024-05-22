@@ -62,6 +62,9 @@ public class GuiApplication extends Application {
     private Button prevPageButton;
     private Button nextPageButton;
 
+    // Class-level variable to track the current sorting order
+    private boolean isAscendingOrder = true;
+
     @Override
     public void start(Stage primaryStage) throws IOException {
         // Load history from file
@@ -78,7 +81,7 @@ public class GuiApplication extends Application {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Label to display selected option
-        Label selectedLabel = new Label("Select an option:");
+        Label selectedLabel = new Label("Selected: keywords");
 
         // Create a TextField
         TextField textField = new TextField();
@@ -123,7 +126,10 @@ public class GuiApplication extends Application {
                 toggleButton6.setSelected(false);
                 field = "full_name";
             } else {
-                selectedLabel.setText("Select an option:");
+                selectedLabel.setText("Selected: keywords");
+                //toggleButton0.setSelected(true);
+                //field = "keywords";
+
             }
         });
 
@@ -137,7 +143,7 @@ public class GuiApplication extends Application {
                 toggleButton6.setSelected(false);
                 field = "institution";
             } else {
-                selectedLabel.setText("Select an option:");
+                selectedLabel.setText("Selected: keywords");
             }
         });
 
@@ -151,7 +157,7 @@ public class GuiApplication extends Application {
                 toggleButton6.setSelected(false);
                 field = "year";
             } else {
-                selectedLabel.setText("Select an option:");
+                selectedLabel.setText("Selected: keywords");
             }
         });
 
@@ -165,7 +171,7 @@ public class GuiApplication extends Application {
                 toggleButton6.setSelected(false);
                 field = "title";
             } else {
-                selectedLabel.setText("Select an option:");
+                selectedLabel.setText("Selected: keywords");
             }
         });
 
@@ -179,7 +185,7 @@ public class GuiApplication extends Application {
                 toggleButton6.setSelected(false);
                 field = "abstract";
             } else {
-                selectedLabel.setText("Select an option:");
+                selectedLabel.setText("Selected: keywords");
             }
         });
 
@@ -193,7 +199,7 @@ public class GuiApplication extends Application {
                 toggleButton5.setSelected(false);
                 field = "full_text";
             } else {
-                selectedLabel.setText("Select an option:");
+                selectedLabel.setText("Selected: keywords");
             }
         });
 
@@ -220,7 +226,6 @@ public class GuiApplication extends Application {
         actionButton.setOnAction(e -> {
             query = textField.getText();
             if (!query.isEmpty()) {
-                greetingLabel.setText("RESULTS:");
                 System.out.println("Confirmed: Your Query Word(s): " + query);
                 System.out.println("Confirmed: Your Selected Field: " + selectedLabel.getText());
                 if (!history.contains(query)){
@@ -248,56 +253,11 @@ public class GuiApplication extends Application {
                 } catch (ParseException | IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                for (String[] result : docs_result) {
-                    // Extract each part and assign it to its respective variable
-                    String hit_num = result[0];
-                    String author = result[1];
-                    String institution = result[2];
-                    String year = result[3];
-                    String title = result[4];
-                    String abstr = result[5];
-                    String abstrContent = "<div style='height: 150px; overflow-y: auto;'>" + abstr + "</div>";
-                    String papper = result[6];
-                    String papperContent = "<div style='height: 150px; overflow-y: auto;'>" + papper + "</div>";
-                    String source_id = result[7];// i don't use it... only for debugging purposes
 
-//                    System.out.println("--"+result.length);
-//                    System.out.println(".."+hit_num);
-//                    System.out.println(".."+author);
-//                    System.out.println(".."+institution);
-//                    System.out.println(".."+year);
-//                    System.out.println(".."+title);
-//                    System.out.println(".."+abstr);
-//                    System.out.println(".."+papper);
-//                    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                makeResults();
 
-                    // Highlight "query"
-                    if (field.equals("full_name")) {
-                        String highlightedAuthorQuery = author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
-                    }
-                    else if (field.equals("institution")) {
-                        String highlightedInstitutionQuery = institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
-                    }
-                    else if (field.equals("year")) {
-                        String highlightedYearQuery = year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
-                    }
-                    else if (field.equals("title")) {
-                        String highlightedTitleQuery = title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
-                    }
-                    else if (field.equals("abstract")) {
-                        String highlightedAbstractQuery = abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+papperContent);
-                    }
-                    else if (field.equals("full_text")) {
-                        String highlightedPapperQuery = papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+highlightedPapperQuery);
-                    }
-                    //else if (field.equals("keywords"))
-                }
+                greetingLabel.setText("RESULTS: " + results.size());
+
                 currentPage = 0;
                 displayResults();
             } else {
@@ -323,7 +283,31 @@ public class GuiApplication extends Application {
             }
         });
 
-        HBox paginationBox = new HBox(10, prevPageButton, nextPageButton);
+        // Create a Button for sorting
+        Button sortButton = new Button("Sort by Year");
+        sortButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+
+        // Set Button action for sorting
+        sortButton.setOnAction(e -> {
+            // Toggle the sorting order
+            isAscendingOrder = !isAscendingOrder;
+
+            // Update the button text based on the sorting order
+            sortButton.setText(isAscendingOrder ? "Sort by Year (Descending)" : "Sort by Year (Ascending)");
+
+            // Sort the results based on the current order
+            sortResultsByYear(isAscendingOrder);
+
+            // Refresh the displayed results
+            displayResults();
+        });
+
+        // Spacer to push sortButton to the right
+        HBox spacer = new HBox();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        HBox paginationBox = new HBox(10, prevPageButton, nextPageButton, spacer, sortButton);
+        paginationBox.setPadding(new Insets(10));
         // Create a VBox layout to hold the WebView
         VBox webViewBox = new VBox();
         webViewBox.setAlignment(Pos.CENTER);
@@ -362,7 +346,7 @@ public class GuiApplication extends Application {
         splitPane.setOrientation(Orientation.VERTICAL);
 
         // Create a Scene
-        Scene scene = new Scene(splitPane, 900, 700);
+        Scene scene = new Scene(splitPane, 1000, 750);
 
         // Set the Stage
         primaryStage.setTitle("Search Engine App");
@@ -448,6 +432,79 @@ public class GuiApplication extends Application {
                         .filter(item -> item.contains(filter))
                         .collect(Collectors.toList())
         );
+    }
+
+    private void makeResults() {
+        for (String[] result : docs_result) {
+            // Extract each part and assign it to its respective variable
+            String hit_num = result[0];
+            String author = result[1];
+            String institution = result[2];
+            String year = result[3];
+            String title = result[4];
+            String abstr = result[5];
+            String abstrContent = "<div style='height: 150px; overflow-y: auto;'>" + abstr + "</div>";
+            String papper = result[6];
+            String papperContent = "<div style='height: 150px; overflow-y: auto;'>" + papper + "</div>";
+            String source_id = result[7];// i don't use it... only for debugging purposes
+
+//                    System.out.println("--"+result.length);
+//                    System.out.println(".."+hit_num);
+//                    System.out.println(".."+author);
+//                    System.out.println(".."+institution);
+//                    System.out.println(".."+year);
+//                    System.out.println(".."+title);
+//                    System.out.println(".."+abstr);
+//                    System.out.println(".."+papper);
+//                    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+            // Highlight "query"
+            if (field.equals("full_name")) {
+                String highlightedAuthorQuery = author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
+            }
+            else if (field.equals("institution")) {
+                String highlightedInstitutionQuery = institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
+            }
+            else if (field.equals("year")) {
+                String highlightedYearQuery = year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
+            }
+            else if (field.equals("title")) {
+                String highlightedTitleQuery = title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
+            }
+            else if (field.equals("abstract")) {
+                String highlightedAbstractQuery = abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+papperContent);
+            }
+            else if (field.equals("full_text")) {
+                String highlightedPapperQuery = papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+highlightedPapperQuery);
+            }
+            //else if (field.equals("keywords"))
+        }
+    }
+
+    // Method to sort the results by year
+    private void sortResultsByYear(boolean ascendingOrder) {
+        // Parse the year from the results and sort accordingly
+        docs_result.sort((a, b) -> {
+            String yearA = a[3]; // Assuming year is at index 3
+            String yearB = b[3];
+            try {
+                int yearIntA = Integer.parseInt(yearA);
+                int yearIntB = Integer.parseInt(yearB);
+                return ascendingOrder ? Integer.compare(yearIntA, yearIntB) : Integer.compare(yearIntB, yearIntA);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        });
+
+        // Rebuild the results list with the sorted data
+        results.clear();
+        makeResults();
     }
 
     private void displayResults() {

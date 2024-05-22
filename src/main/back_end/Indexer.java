@@ -140,8 +140,16 @@ public class Indexer {
             System.out.println("-> " + institution);
             System.out.println("-> " + year);
             System.out.println("-> " + title);
-            System.out.println("-> " + abstr.substring(0, 60) + " ...");
-            System.out.println("-> " + papper.substring(0, 60) + " ...");
+            if (abstr.length() >= 60) {
+                System.out.println("-> " + abstr.substring(0, 60) + " ...");
+            } else {
+                System.out.println("-> " + abstr);
+            }
+            if (papper.length() >= 60) {
+                System.out.println("-> " + papper.substring(0, 60) + " ...");
+            } else {
+                System.out.println("-> " + papper);
+            }
             System.out.println("__________________________________________________________________");
         }
 
@@ -157,31 +165,6 @@ public class Indexer {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
-//        String corpus = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\dummy.txt";
-//        String separator_column = "\\|\\|\\|";
-//        String separator_line = ";!.";
-//        ArrayList<String[]> rows = new ArrayList<>();
-//
-//        try (BufferedReader reader = new BufferedReader(new FileReader(corpus))){
-//            String line;
-//            boolean separatorFound = false;
-//
-//            while ((line = reader.readLine()) != null && !separatorFound){
-//                System.out.println(line);
-//                String[] column_values = line.split(separator_column);
-//
-//                for (String value : column_values){
-//                    System.out.println(value);
-//                    if(value.equals(separator_line)) {
-//                        rows.add(column_values);
-//
-//                    } else {
-//                        rows.add(column_values);
-//                    }
-//
-//                }
-//            }
-//        }
 
         String csvFile = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\corpus.csv";
 
