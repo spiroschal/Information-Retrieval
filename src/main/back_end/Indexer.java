@@ -60,17 +60,27 @@ public class Indexer {
                     counter++;//
                 }
             }
-            System.out.println("HIIIIIIIIIIIIIII " + counter);//
+            System.out.println("Number Of Documents That I Have: " + counter);//
         } catch (IOException | CsvValidationException e) {
             e.printStackTrace();
         }
 
+        w.close();
+
         return documents;
     }
 
-    public static List<Document> searchIntexer(Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
-        int hitsPerPage = 10;
+    public static List<Document> searchIntexer(int numberOfHits, Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
+        int hitsPerPage = numberOfHits;//909;
         Query q = new QueryParser(field, analyzer).parse(query);
+//        if(field.equals("all")){
+//            searchIntexer(numberOfHits, index, query, "full_name", analyzer);
+//            searchIntexer(numberOfHits, index, query, "institution", analyzer);
+//            searchIntexer(numberOfHits, index, query, "year", analyzer);
+//            searchIntexer(numberOfHits, index, query, "title", analyzer);
+//            searchIntexer(numberOfHits, index, query, "abstract", analyzer);
+//            searchIntexer(numberOfHits, index, query, "full_text", analyzer);
+//        }
 
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
@@ -141,11 +151,11 @@ public class Indexer {
 
         //Create the Index
         List<Document> documents = makeIntexer(w, csvFile);
-        w.close();
+        //w.close();
 
         //Search the Index
         String query = "Bregman"; // write your String_Query HERE
         String field = "title"; // write your String_Field HERE
-        searchIntexer(index, query, field, analyzer);
+        searchIntexer(documents.size(), index, query, field, analyzer);
     }
 }
