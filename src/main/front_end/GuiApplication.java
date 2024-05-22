@@ -211,8 +211,8 @@ public class GuiApplication extends Application {
         Label greetingLabel = new Label();
         greetingLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        prevPageButton = new Button("⬅️ Previous");
-        nextPageButton = new Button("Next ➡️");
+        prevPageButton = new Button("⬅ Previous");
+        nextPageButton = new Button("Next ➡");
 
         webView = new WebView();
 
@@ -256,9 +256,10 @@ public class GuiApplication extends Application {
                     String year = result[3];
                     String title = result[4];
                     String abstr = result[5];
-                    String abstrContent = "<div style='height: 120px; overflow-y: auto;'>" + abstr + "</div>";
+                    String abstrContent = "<div style='height: 150px; overflow-y: auto;'>" + abstr + "</div>";
                     String papper = result[6];
-                    String papperContent = "<div style='height: 120px; overflow-y: auto;'>" + papper + "</div>";
+                    String papperContent = "<div style='height: 150px; overflow-y: auto;'>" + papper + "</div>";
+                    String source_id = result[7];// i don't use it... only for debugging purposes
 
 //                    System.out.println("--"+result.length);
 //                    System.out.println(".."+hit_num);
@@ -276,19 +277,24 @@ public class GuiApplication extends Application {
                         results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
                     }
                     else if (field.equals("institution")) {
-                        String highlightedQuery = institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        String highlightedInstitutionQuery = institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
                     }
                     else if (field.equals("year")) {
-                        String highlightedQuery = year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        String highlightedYearQuery = year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
                     }
                     else if (field.equals("title")) {
-                        String highlightedQuery = title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        String highlightedTitleQuery = title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
                     }
                     else if (field.equals("abstract")) {
-                        String highlightedQuery = abstr.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        String highlightedAbstractQuery = abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+papperContent);
                     }
                     else if (field.equals("full_text")) {
-                        String highlightedQuery = papper.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        String highlightedPapperQuery = papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                        results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+highlightedPapperQuery);
                     }
                     //else if (field.equals("keywords"))
                 }
@@ -451,7 +457,11 @@ public class GuiApplication extends Application {
         for (int i = start; i < end; i++) {
             content.append(results.get(i)).append("<br/><hr/>");
         }
-        webView.getEngine().loadContent("<html><body>" + content.toString() + "</body></html>");
+        if (results.size() == 0) {
+            webView.getEngine().loadContent("<html><body>" + "NOTHING FOUND..." + "</body></html>");
+        } else {
+            webView.getEngine().loadContent("<html><body>" + content.toString() + "</body></html>");
+        }
 
         // Enable or disable buttons based on the current page
         prevPageButton.setDisable(currentPage == 0);

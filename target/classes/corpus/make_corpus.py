@@ -68,7 +68,7 @@ print(grouped_df)
 #     break
 
 # einai pano apo 200 papers ara imaste ok = 909
-grouped_df = grouped_df[grouped_df['source_id'] < 3410]
+#grouped_df = grouped_df[grouped_df['source_id'] < 3410]
 print(grouped_df.shape)
 
 # ftiaxno to csv axreio gia na to xreisimopoihso sto java project tis lucene

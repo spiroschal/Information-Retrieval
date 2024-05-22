@@ -2,6 +2,7 @@ package back_end;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -19,9 +20,13 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +50,29 @@ public class Indexer {
         List<Document> documents = new ArrayList<Document>();
         int counter = 0;//
 
-        try (CSVReader reader = new CSVReader(new FileReader(csv_file))) {
-            String[] csv_line;
-            while ((csv_line = reader.readNext()) != null) {
+        try
+               // (CSVReader reader = new CSVReader(new FileReader(csv_file)))
+        {
+            Reader reader = new FileReader(csv_file);
+            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
+
+            //String[] csv_line;
+
+            //while ((csv_line = reader.readNext()) != null) {
+            for (CSVRecord csvRecord : csvParser) {
+                int numberOfColumns = csvRecord.size();
+                String[] csv_line = new String[numberOfColumns];
+
+                csv_line[0] = csvRecord.get(0);
+                csv_line[1] = csvRecord.get(1);
+                csv_line[2] = csvRecord.get(2);
+                csv_line[3] = csvRecord.get(3);
+                csv_line[4] = csvRecord.get(4);
+                csv_line[5] = csvRecord.get(5);
+                csv_line[6] = csvRecord.get(6);
+
+                documents.add(addDoc(w, csv_line));
+
 //                System.out.println("HELOOOOOOO " + csv_line[0]);
 //                System.out.println("HELOOOOOOO " + csv_line[1]);
 //                System.out.println("HELOOOOOOO " + csv_line[2]);
@@ -55,13 +80,16 @@ public class Indexer {
 //                System.out.println("HELOOOOOOO " + csv_line[4]);
 //                System.out.println("HELOOOOOOO " + csv_line[5]);
 //                System.out.println("HELOOOOOOO " + csv_line[6]);
-                if (csv_line.length == 7 && isNumber(csv_line[0])) {
-                    documents.add(addDoc(w, csv_line));
-                    counter++;//
-                }
+//                if (csv_line.length == 7 && isNumber(csv_line[0])) {
+//                    documents.add(addDoc(w, csv_line));
+//                    counter++;//
+//                }
+                counter++;
             }
+            csvParser.close();
+
             System.out.println("Number Of Documents That I Have: " + counter);//
-        } catch (IOException | CsvValidationException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -97,13 +125,14 @@ public class Indexer {
             //docs_result.add(d);
 
             // String hit_num
+            String source_id = d.get("source_id");//
             String author = d.get("full_name");
             String institution = d.get("institution");
             String year = d.get("year");
             String title = d.get("title");
-            String abstr = d.get("abstract");
-            String papper = d.get("full_text");
-            String[] doc_result = {Integer.toString(i + 1), author, institution, year, title, abstr, papper};
+            String abstr = StringEscapeUtils.escapeHtml4(d.get("abstract"));
+            String papper = StringEscapeUtils.escapeHtml4(d.get("full_text"));
+            String[] doc_result = {Integer.toString(i + 1), author, institution, year, title, abstr, papper, source_id};
             docs_result.add(doc_result);
 
             System.out.println((i + 1) + ". " + d.get("source_id"));
