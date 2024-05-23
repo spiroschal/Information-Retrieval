@@ -1,7 +1,5 @@
 package back_end;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -31,8 +29,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.math.NumberUtils.isNumber;
-
 public class Indexer {
     private static Document addDoc(IndexWriter w, String[] csv_line_value) throws IOException {
         Document doc = new Document();
@@ -52,14 +48,10 @@ public class Indexer {
         int counter = 0;//
 
         try
-               // (CSVReader reader = new CSVReader(new FileReader(csv_file)))
         {
             Reader reader = new FileReader(csv_file);
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
-            //String[] csv_line;
-
-            //while ((csv_line = reader.readNext()) != null) {
             for (CSVRecord csvRecord : csvParser) {
                 int numberOfColumns = csvRecord.size();
                 String[] csv_line = new String[numberOfColumns];
@@ -73,7 +65,7 @@ public class Indexer {
                 csv_line[6] = csvRecord.get(6);
 
                 documents.add(addDoc(w, csv_line));
-
+                // for debugging purposes
 //                System.out.println("HELOOOOOOO " + csv_line[0]);
 //                System.out.println("HELOOOOOOO " + csv_line[1]);
 //                System.out.println("HELOOOOOOO " + csv_line[2]);
@@ -81,10 +73,7 @@ public class Indexer {
 //                System.out.println("HELOOOOOOO " + csv_line[4]);
 //                System.out.println("HELOOOOOOO " + csv_line[5]);
 //                System.out.println("HELOOOOOOO " + csv_line[6]);
-//                if (csv_line.length == 7 && isNumber(csv_line[0])) {
-//                    documents.add(addDoc(w, csv_line));
-//                    counter++;//
-//                }
+
                 counter++;
             }
             csvParser.close();
@@ -128,7 +117,6 @@ public class Indexer {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
 
-            // String hit_num
             String source_id = d.get("source_id");//
             String author = d.get("full_name");
             String institution = d.get("institution");
@@ -139,6 +127,7 @@ public class Indexer {
             String[] doc_result = {Integer.toString(i + 1), author, institution, year, title, abstr, papper, source_id};
             docs_result.add(doc_result);
 
+            // for debugging purposes
             System.out.println((i + 1) + ". " + d.get("source_id"));
             System.out.println("-> " + author);
             System.out.println("-> " + institution);
@@ -161,6 +150,8 @@ public class Indexer {
 
     public static void main(String[] args) throws IOException, ParseException {
 
+        // main testing example (without GUI)
+
         String csvFile = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\corpus.csv";
 
         StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -172,7 +163,6 @@ public class Indexer {
 
         //Create the Index
         List<Document> documents = makeIntexer(w, csvFile);
-        //w.close();
 
         //Search the Index
         String query = "2018"; // write your String_Query HERE
