@@ -92,8 +92,10 @@ public class Indexer {
         Query q;
         if (field.equals("keywords")) {
             String[] fields = {"full_name", "institution", "year", "title", "abstract", "full_text"};
+            // initialize searching in the index by only a keyword (it is searching in all fields)
             q = new MultiFieldQueryParser(fields, analyzer).parse(query);
         } else {
+            // initialize searching in the index by specific field and query
             q = new QueryParser(field, analyzer).parse(query);
         }
 
@@ -104,8 +106,12 @@ public class Indexer {
 
     private static List<String[]> printDocs(int numberOfHits, Directory index, Query q) throws IOException {
         int hitsPerPage = numberOfHits;//2029;
+
+        // create the indexReader (features: the object that is responsible for reading documents to the index)
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
+
+        // actual searching
         TopDocs docs = searcher.search(q, hitsPerPage);
         ScoreDoc[] hits = docs.scoreDocs;
 
@@ -154,19 +160,26 @@ public class Indexer {
 
         String csvFile = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\corpus.csv";
 
+        // create the analyzer (features: tokenization, Lowercasing, Stop Words, Stemming)
         StandardAnalyzer analyzer = new StandardAnalyzer();
+
+        // initialize the index (features: where to save it: in RAM)
         Directory index = new ByteBuffersDirectory();
 
+        // create the config (features: special configurations for the indexWriter in the next step)
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
 
+        // initialize the indexWriter (features: the object that is responsible for writing documents to the index)
         IndexWriter w = new IndexWriter(index, config);
 
-        //Create the Index
+        // adding documents to the indexer
         List<Document> documents = makeIntexer(w, csvFile);
 
-        //Search the Index
+        // testing data
         String query = "2018"; // write your String_Query HERE
         String field = "keywords"; // write your String_Field HERE
+
+        // searching
         searchIntexer(documents.size(), index, query, field, analyzer);
     }
 }

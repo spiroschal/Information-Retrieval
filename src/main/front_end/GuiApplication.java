@@ -38,9 +38,17 @@ public class GuiApplication extends Application {
     private ProgressIndicator loadingIndicator;
 
     private String csvFile = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\corpus.csv";
+
+    // create the analyzer (features: tokenization, Lowercasing, Stop Words, Stemming)
     private StandardAnalyzer analyzer = new StandardAnalyzer();
+
+    // initialize the index (features: where to save it: in RAM)
     private Directory index = new ByteBuffersDirectory();
+
+    // create the config (features: special configurations for the indexWriter in the next step)
     private IndexWriterConfig config = new IndexWriterConfig(analyzer);
+
+    // initialize the indexWriter (features: the object that is responsible for writing documents to the index)
     private IndexWriter w;
     {
         try {
