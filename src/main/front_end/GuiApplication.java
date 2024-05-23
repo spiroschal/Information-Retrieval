@@ -356,7 +356,7 @@ public class GuiApplication extends Application {
         });
 
         // Create a VBox layout and add the controls
-        VBox vbox = new VBox(10, selectedLabel, hbox_toggledButtons, hbox, historyLabel, historyListView, loadingIndicator, greetingLabel);
+        VBox vbox = new VBox(10, selectedLabel, hbox_toggledButtons, hbox, historyListView, historyLabel, loadingIndicator, greetingLabel);
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setStyle("-fx-padding: 20;");
         //VBox.setVgrow(hbox, Priority.ALWAYS);
