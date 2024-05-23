@@ -1,3 +1,11 @@
+Step Size Matters
+Learning step sizes for unfolded sparse
+INRIA -
+INRIA
+2011
+James
+Massa
+Francisco
 Zheng Li Christopher De Sa
 Zheng Li, Christopher De Sa
 Sa
@@ -8,7 +16,6 @@ In this paper, we develop
 in this paper
 in this paper aa
 Francisco we
-Francisco
 an
 Magdon-
 Magdon

@@ -81,14 +81,10 @@ public class GuiApplication extends Application {
         history = loadHistory();
         filteredHistory.addAll(history);
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         // Create a loading indicator
         loadingIndicator = new ProgressIndicator();
         loadingIndicator.setPrefSize(50, 50);
         loadingIndicator.setVisible(true);
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Label to display selected option
         Label selectedLabel = new Label("Selected: keywords");
@@ -118,9 +114,7 @@ public class GuiApplication extends Application {
         toggleButton5.setSelected(false);
         toggleButton6.setSelected(false);
         selectedLabel.setText("Selected: keywords");
-        //selectedLabel.setText("Selected: full_name");
         field = "keywords";
-        //field = "full_name";
 
         // Set action on toggle buttons
         toggleButton0.setOnAction(e -> {
@@ -481,48 +475,49 @@ public class GuiApplication extends Application {
             String papperContent = "<div style='height: 110px; overflow-y: auto;'>" + papper + "</div>";
             String source_id = result[7];// i don't use it... only for debugging purposes
 
-//                    System.out.println("--"+result.length);
-//                    System.out.println(".."+hit_num);
-//                    System.out.println(".."+author);
-//                    System.out.println(".."+institution);
-//                    System.out.println(".."+year);
-//                    System.out.println(".."+title);
-//                    System.out.println(".."+abstr);
-//                    System.out.println(".."+papper);
-//                    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            // for debugging purposes
+//            System.out.println("--"+result.length);
+//            System.out.println(".."+hit_num);
+//            System.out.println(".."+author);
+//            System.out.println(".."+institution);
+//            System.out.println(".."+year);
+//            System.out.println(".."+title);
+//            System.out.println(".."+abstr);
+//            System.out.println(".."+papper);
+//            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
             // Highlight "query"
             if (field.equals("full_name")) {
-                String highlightedAuthorQuery = highlightText(author, pattern);//author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAuthorQuery = highlightText(author, pattern);
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("institution")) {
-                String highlightedInstitutionQuery = highlightText(institution, pattern);//institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedInstitutionQuery = highlightText(institution, pattern);
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("year")) {
-                String highlightedYearQuery = highlightText(year, pattern);//year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedYearQuery = highlightText(year, pattern);
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("title")) {
-                String highlightedTitleQuery = highlightText(title, pattern);//title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedTitleQuery = highlightText(title, pattern);
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("abstract")) {
-                String highlightedAbstractQuery = highlightText(abstrContent, pattern);//abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAbstractQuery = highlightText(abstrContent, pattern);
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("full_text")) {
-                String highlightedPapperQuery = highlightText(papperContent, pattern);//papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedPapperQuery = highlightText(papperContent, pattern);
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+highlightedPapperQuery);
             }
             else if (field.equals("keywords")) {
-                String highlightedAuthorQuery = highlightText(author, pattern);//author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedInstitutionQuery = highlightText(institution, pattern);//institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedYearQuery = highlightText(year, pattern);//year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedTitleQuery = highlightText(title, pattern);//title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedAbstractQuery = highlightText(abstrContent, pattern);//abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedPapperQuery = highlightText(papperContent, pattern);//papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAuthorQuery = highlightText(author, pattern);
+                String highlightedInstitutionQuery = highlightText(institution, pattern);
+                String highlightedYearQuery = highlightText(year, pattern);
+                String highlightedTitleQuery = highlightText(title, pattern);
+                String highlightedAbstractQuery = highlightText(abstrContent, pattern);
+                String highlightedPapperQuery = highlightText(papperContent, pattern);
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+highlightedPapperQuery);
             }
         }
@@ -544,7 +539,7 @@ public class GuiApplication extends Application {
     private void sortResultsByYear(boolean ascendingOrder) {
         // Parse the year from the results and sort accordingly
         docs_result.sort((a, b) -> {
-            String yearA = a[3]; // Assuming year is at index 3
+            String yearA = a[3]; // 3 is the Year field
             String yearB = b[3];
             try {
                 int yearIntA = Integer.parseInt(yearA);
