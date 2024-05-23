@@ -16,7 +16,7 @@
 τρέχω το `GuiApplication.java` που είναι σε αυτό το path: `src/main/front_end`<br><br>
 
 ### Πληροφορίες για τα δεδομένα
-Τα δεδομένα που χρησιμοποιούμε βρίσκονται στο αρχείο `corpus.csv` που είναι στο path `src/main/corpus`. Αυτό το αρχείο δημιουργείται από την εκτέλεση του Python αρχείου `make_corpus.py` και έχοντας ως αρχική πληροφορία δεδομένων τα αρχεία `authors.csv` και `papers.csv`(τα οποία **ΔΕΝ** συμπεριλαμβάνονται εδώ, τα έχουμε πάρει από το link: https://www.kaggle.com/datasets/rowhitswami/nips-papers-1987-2019-updated/data?select=papers.csv). Επομένως, αν θέλουμε να τρέξουμε το Python script, πρέπει να κατεβάσουμε από το link αυτά τα 2 csv αρχεία, αλλά αφού έχουμε το `corpus.csv`, η εκτέλεση του `make_corpus.py` δεν είναι απαραίτητη.
+Τα δεδομένα που χρησιμοποιούμε βρίσκονται στο αρχείο `corpus.csv` που είναι στο path `src/main/corpus`. Αυτό το αρχείο δημιουργείται από την εκτέλεση του Python αρχείου `make_corpus.py` και έχοντας ως αρχική πληροφορία δεδομένων τα αρχεία `authors.csv` και `papers.csv`(τα οποία **ΔΕΝ** συμπεριλαμβάνονται εδώ, τα έχουμε πάρει από το link: https://www.kaggle.com/datasets/rowhitswami/nips-papers-1987-2019-updated/data?select=papers.csv). Επομένως, αν θέλουμε να τρέξουμε το Python script, πρέπει να κατεβάσουμε από το link αυτά τα 2 csv αρχεία και να τα βάλουμε στον ίδιο path, αλλά αφού έχουμε το `corpus.csv`, η εκτέλεση του `make_corpus.py` δεν είναι απαραίτητη.
 
 ### Πως χειρίζομαι το GUI
 Μόλις αρχίσει η εκτέλεση θα ανοίξει ένα παράθυρο σαν αυτό:<br>
