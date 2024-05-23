@@ -12,6 +12,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -99,17 +100,21 @@ public class Indexer {
     }
 
     public static List<String[]> searchIntexer(int numberOfHits, Directory index, String query, String field, Analyzer analyzer) throws ParseException, IOException {
-        int hitsPerPage = numberOfHits;//909;
-        Query q = new QueryParser(field, analyzer).parse(query);
-//        if(field.equals("all")){
-//            searchIntexer(numberOfHits, index, query, "full_name", analyzer);
-//            searchIntexer(numberOfHits, index, query, "institution", analyzer);
-//            searchIntexer(numberOfHits, index, query, "year", analyzer);
-//            searchIntexer(numberOfHits, index, query, "title", analyzer);
-//            searchIntexer(numberOfHits, index, query, "abstract", analyzer);
-//            searchIntexer(numberOfHits, index, query, "full_text", analyzer);
-//        }
+        Query q;
+        if (field.equals("keywords")) {
+            String[] fields = {"full_name", "institution", "year", "title", "abstract", "full_text"};
+            q = new MultiFieldQueryParser(fields, analyzer).parse(query);
+        } else {
+            q = new QueryParser(field, analyzer).parse(query);
+        }
 
+        List<String[]> docs_result = printDocs(numberOfHits, index, q);
+
+        return docs_result;
+    }
+
+    private static List<String[]> printDocs(int numberOfHits, Directory index, Query q) throws IOException {
+        int hitsPerPage = numberOfHits;//2029;
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs docs = searcher.search(q, hitsPerPage);
@@ -122,7 +127,6 @@ public class Indexer {
         for(int i=0;i<hits.length;++i) {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
-            //docs_result.add(d);
 
             // String hit_num
             String source_id = d.get("source_id");//
@@ -152,16 +156,7 @@ public class Indexer {
             }
             System.out.println("__________________________________________________________________");
         }
-
         return docs_result;
-    }
-
-    public List<String> myFunction(String arg1, String arg2) {
-        List<String> results = new ArrayList<>();
-        for (int i = 0; i < 12; i++) { // Just an example to return multiple results
-            results.add("Result " + (i+1) + ": " + arg1 + arg2);
-        }
-        return results;
     }
 
     public static void main(String[] args) throws IOException, ParseException {
@@ -180,8 +175,8 @@ public class Indexer {
         //w.close();
 
         //Search the Index
-        String query = "Bregman"; // write your String_Query HERE
-        String field = "title"; // write your String_Field HERE
+        String query = "2018"; // write your String_Query HERE
+        String field = "keywords"; // write your String_Field HERE
         searchIntexer(documents.size(), index, query, field, analyzer);
     }
 }

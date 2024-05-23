@@ -89,7 +89,7 @@ public class GuiApplication extends Application {
         //VBox.setVgrow(textField, Priority.ALWAYS);
 
         // Create ToggleButtons
-        //ToggleButton toggleButton0 = new ToggleButton("keywords");
+        ToggleButton toggleButton0 = new ToggleButton("keywords");
         ToggleButton toggleButton1 = new ToggleButton("full_name");
         ToggleButton toggleButton2 = new ToggleButton("institution");
         ToggleButton toggleButton3 = new ToggleButton("year");
@@ -97,28 +97,43 @@ public class GuiApplication extends Application {
         ToggleButton toggleButton5 = new ToggleButton("abstract");
         ToggleButton toggleButton6 = new ToggleButton("full_text");
 
-        HBox hbox_toggledButtons = new HBox(10, toggleButton1, toggleButton2, toggleButton3, toggleButton4, toggleButton5, toggleButton6);
+        HBox hbox_toggledButtons = new HBox(10, toggleButton0, toggleButton1, toggleButton2, toggleButton3, toggleButton4, toggleButton5, toggleButton6);
 
         // Initial pressed button
-        //toggleButton0.setSelected(true);
-        toggleButton1.setSelected(true);
+        toggleButton0.setSelected(true);
+        toggleButton1.setSelected(false);
         toggleButton2.setSelected(false);
         toggleButton3.setSelected(false);
         toggleButton4.setSelected(false);
         toggleButton5.setSelected(false);
         toggleButton6.setSelected(false);
-        //selectedLabel.setText("Selected: keywords");
-        selectedLabel.setText("Selected: full_name");
-        //field = "keywords";
-        field = "full_name";
+        selectedLabel.setText("Selected: keywords");
+        //selectedLabel.setText("Selected: full_name");
+        field = "keywords";
+        //field = "full_name";
 
         // Set action on toggle buttons
-        //toggleButton0.setOnAction(e -> {
-        //field = "keywords";
+        toggleButton0.setOnAction(e -> {
+            if (toggleButton0.isSelected()) {
+                selectedLabel.setText("Selected: keywords");
+                toggleButton1.setSelected(false);
+                toggleButton2.setSelected(false);
+                toggleButton3.setSelected(false);
+                toggleButton4.setSelected(false);
+                toggleButton5.setSelected(false);
+                toggleButton6.setSelected(false);
+                field = "keywords";
+            } else {
+                selectedLabel.setText("Selected: keywords");
+                toggleButton0.setSelected(true);
+                field = "keywords";
+            }
+        });
 
         toggleButton1.setOnAction(e -> {
             if (toggleButton1.isSelected()) {
                 selectedLabel.setText("Selected: full_name");
+                toggleButton0.setSelected(false);
                 toggleButton2.setSelected(false);
                 toggleButton3.setSelected(false);
                 toggleButton4.setSelected(false);
@@ -127,8 +142,8 @@ public class GuiApplication extends Application {
                 field = "full_name";
             } else {
                 selectedLabel.setText("Selected: keywords");
-                //toggleButton0.setSelected(true);
-                //field = "keywords";
+                toggleButton0.setSelected(true);
+                field = "keywords";
 
             }
         });
@@ -136,6 +151,7 @@ public class GuiApplication extends Application {
         toggleButton2.setOnAction(e -> {
             if (toggleButton2.isSelected()) {
                 selectedLabel.setText("Selected: institution");
+                toggleButton0.setSelected(false);
                 toggleButton1.setSelected(false);
                 toggleButton3.setSelected(false);
                 toggleButton4.setSelected(false);
@@ -144,12 +160,15 @@ public class GuiApplication extends Application {
                 field = "institution";
             } else {
                 selectedLabel.setText("Selected: keywords");
+                toggleButton0.setSelected(true);
+                field = "keywords";
             }
         });
 
         toggleButton3.setOnAction(e -> {
             if (toggleButton3.isSelected()) {
                 selectedLabel.setText("Selected: year");
+                toggleButton0.setSelected(false);
                 toggleButton1.setSelected(false);
                 toggleButton2.setSelected(false);
                 toggleButton4.setSelected(false);
@@ -158,12 +177,15 @@ public class GuiApplication extends Application {
                 field = "year";
             } else {
                 selectedLabel.setText("Selected: keywords");
+                toggleButton0.setSelected(true);
+                field = "keywords";
             }
         });
 
         toggleButton4.setOnAction(e -> {
             if (toggleButton4.isSelected()) {
                 selectedLabel.setText("Selected: title");
+                toggleButton0.setSelected(false);
                 toggleButton1.setSelected(false);
                 toggleButton2.setSelected(false);
                 toggleButton3.setSelected(false);
@@ -172,12 +194,15 @@ public class GuiApplication extends Application {
                 field = "title";
             } else {
                 selectedLabel.setText("Selected: keywords");
+                toggleButton0.setSelected(true);
+                field = "keywords";
             }
         });
 
         toggleButton5.setOnAction(e -> {
             if (toggleButton5.isSelected()) {
                 selectedLabel.setText("Selected: abstract");
+                toggleButton0.setSelected(false);
                 toggleButton1.setSelected(false);
                 toggleButton2.setSelected(false);
                 toggleButton3.setSelected(false);
@@ -186,12 +211,15 @@ public class GuiApplication extends Application {
                 field = "abstract";
             } else {
                 selectedLabel.setText("Selected: keywords");
+                toggleButton0.setSelected(true);
+                field = "keywords";
             }
         });
 
         toggleButton6.setOnAction(e -> {
             if (toggleButton6.isSelected()) {
                 selectedLabel.setText("Selected: full_text");
+                toggleButton0.setSelected(false);
                 toggleButton1.setSelected(false);
                 toggleButton2.setSelected(false);
                 toggleButton3.setSelected(false);
@@ -200,6 +228,8 @@ public class GuiApplication extends Application {
                 field = "full_text";
             } else {
                 selectedLabel.setText("Selected: keywords");
+                toggleButton0.setSelected(true);
+                field = "keywords";
             }
         });
 
@@ -235,16 +265,6 @@ public class GuiApplication extends Application {
                 }
                 textField.clear();
                 updateFilteredHistory("");
-
-                //if (field == "keywords") {
-                // indexer.searchIntexer(documents.size(), index, query, "full_name", analyzer);
-                // for (String[] result : docs_result) ????????
-                // indexer.searchIntexer(documents.size(), index, query, "institution", analyzer);
-                // indexer.searchIntexer(documents.size(), index, query, "year", analyzer);
-                // indexer.searchIntexer(documents.size(), index, query, "title", analyzer);
-                // indexer.searchIntexer(documents.size(), index, query, "abstract", analyzer);
-                // indexer.searchIntexer(documents.size(), index, query, "full_text", analyzer);
-                // }
 
                 results.clear();
                 // Call 'searchIntexer' function
@@ -483,7 +503,15 @@ public class GuiApplication extends Application {
                 String highlightedPapperQuery = papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+highlightedPapperQuery);
             }
-            //else if (field.equals("keywords"))
+            else if (field.equals("keywords")) {
+                String highlightedAuthorQuery = author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedInstitutionQuery = institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedYearQuery = year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedTitleQuery = title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAbstractQuery = abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedPapperQuery = papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+highlightedPapperQuery);
+            }
         }
     }
 
