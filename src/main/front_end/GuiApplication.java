@@ -25,6 +25,8 @@ import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +39,11 @@ public class GuiApplication extends Application {
     private ObservableList<String> filteredHistory = FXCollections.observableArrayList();
     private ProgressIndicator loadingIndicator;
 
-    private String csvFile = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\corpus.csv";
+    // for take automatically the current path
+    private Path currentRelativePath = Paths.get("");
+    private String basePath = currentRelativePath.toAbsolutePath().toString();
+    private String csvFile = Paths.get(basePath, "src", "main", "corpus", "corpus.csv").toString();
+    //private String csvFile = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\corpus.csv";
 
     // create the analyzer (features: tokenization, Lowercasing, Stop Words, Stemming)
     private StandardAnalyzer analyzer = new StandardAnalyzer();

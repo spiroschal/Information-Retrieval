@@ -158,6 +158,7 @@ public class Indexer {
 
         // main testing example (without GUI)
 
+        // link must change in current
         String csvFile = "C:\\Users\\user\\IdeaProjects\\Information-Retrieval\\src\\main\\corpus\\corpus.csv";
 
         // create the analyzer (features: tokenization, Lowercasing, Stop Words, Stemming)
