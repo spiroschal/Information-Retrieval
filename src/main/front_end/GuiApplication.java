@@ -26,6 +26,8 @@ import org.apache.lucene.store.Directory;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GuiApplication extends Application {
@@ -455,6 +457,9 @@ public class GuiApplication extends Application {
     }
 
     private void makeResults() {
+        String regex = "\\b(?i)" + Pattern.quote(query) + "\\b"; // (?i) makes the regex case-insensitive
+        Pattern pattern = Pattern.compile(regex);
+
         for (String[] result : docs_result) {
             // Extract each part and assign it to its respective variable
             String hit_num = result[0];
@@ -463,9 +468,9 @@ public class GuiApplication extends Application {
             String year = result[3];
             String title = result[4];
             String abstr = result[5];
-            String abstrContent = "<div style='height: 150px; overflow-y: auto;'>" + abstr + "</div>";
+            String abstrContent = "<div style='height: 110px; overflow-y: auto;'>" + abstr + "</div>";
             String papper = result[6];
-            String papperContent = "<div style='height: 150px; overflow-y: auto;'>" + papper + "</div>";
+            String papperContent = "<div style='height: 110px; overflow-y: auto;'>" + papper + "</div>";
             String source_id = result[7];// i don't use it... only for debugging purposes
 
 //                    System.out.println("--"+result.length);
@@ -480,39 +485,51 @@ public class GuiApplication extends Application {
 
             // Highlight "query"
             if (field.equals("full_name")) {
-                String highlightedAuthorQuery = author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAuthorQuery = highlightText(author, pattern);//author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("institution")) {
-                String highlightedInstitutionQuery = institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedInstitutionQuery = highlightText(institution, pattern);//institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("year")) {
-                String highlightedYearQuery = year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedYearQuery = highlightText(year, pattern);//year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("title")) {
-                String highlightedTitleQuery = title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedTitleQuery = highlightText(title, pattern);//title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("abstract")) {
-                String highlightedAbstractQuery = abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAbstractQuery = highlightText(abstrContent, pattern);//abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+papperContent);
             }
             else if (field.equals("full_text")) {
-                String highlightedPapperQuery = papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedPapperQuery = highlightText(papperContent, pattern);//papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+author+"<br><b>Institution: </b>"+institution+"<br><b>Year: </b>"+year+"<br><b>Title: </b>"+title+"<br><br><b>Abstract: </b>"+abstrContent+"<br><b>Papper: </b>"+highlightedPapperQuery);
             }
             else if (field.equals("keywords")) {
-                String highlightedAuthorQuery = author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedInstitutionQuery = institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedYearQuery = year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedTitleQuery = title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedAbstractQuery = abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
-                String highlightedPapperQuery = papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAuthorQuery = highlightText(author, pattern);//author.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedInstitutionQuery = highlightText(institution, pattern);//institution.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedYearQuery = highlightText(year, pattern);//year.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedTitleQuery = highlightText(title, pattern);//title.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedAbstractQuery = highlightText(abstrContent, pattern);//abstrContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
+                String highlightedPapperQuery = highlightText(papperContent, pattern);//papperContent.replace(query, "<span style='background-color: yellow;'>"+query+"</span>");
                 results.add("<center><u><b>Result: "+hit_num+"</b></u></center>"+"<br><b>Author: </b>"+highlightedAuthorQuery+"<br><b>Institution: </b>"+highlightedInstitutionQuery+"<br><b>Year: </b>"+highlightedYearQuery+"<br><b>Title: </b>"+highlightedTitleQuery+"<br><br><b>Abstract: </b>"+highlightedAbstractQuery+"<br><b>Papper: </b>"+highlightedPapperQuery);
             }
         }
+    }
+
+    private String highlightText(String text, Pattern pattern) {
+        Matcher matcher = pattern.matcher(text);
+        StringBuffer highlightedText = new StringBuffer();
+
+        while (matcher.find()) {
+            matcher.appendReplacement(highlightedText, "<span style='background-color: yellow;'>" + matcher.group() + "</span>");
+        }
+        matcher.appendTail(highlightedText);
+
+        return highlightedText.toString();
     }
 
     // Method to sort the results by year
